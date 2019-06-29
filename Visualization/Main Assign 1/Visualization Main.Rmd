@@ -1,0 +1,1233 @@
+```{R}
+require(ggplot2)
+```
+
+```{R}
+main <- read.csv('main.csv')
+combined <- read.csv('Combined.csv')
+```
+
+
+Population---------------------------------------------------------------------------------------------------------------------------
+
+```{R}
+ggplot(data=main, aes(x=main$population,y=main$suicides_no,color = main$sex )) +  
+    geom_point(alpha=0.1) +
+  ggtitle("Main Plot -- Population Vs Suicide No")+
+scale_x_continuous(name = "Population")+
+      scale_y_continuous(name = "Suicide No") + 
+      labs(color="Sex")
+```
+```{R}
+ggplot(data=main, aes(x=main$gdp_for_year....,y=main$suicides.100k.pop,color = main$sex )) +  
+    geom_point(alpha=0.1) +
+  ggtitle("Main Plot -- GDP For Year Vs Suicide No Per 100K population")+
+scale_x_continuous(name = "GDP For Year")+
+      scale_y_continuous(name = "Suicide No Per 100K population") + 
+      labs(color="Sex")
+```
+
+```{R}
+ggplot(data=main, aes(x=main$gdp_per_capita....,y=main$suicides.100k.pop,color = main$sex )) +  
+    geom_point(alpha=0.1) +
+  ggtitle("Main Plot -- GDP Per Capita Vs Suicide No Per 100K population")+
+scale_x_continuous(name = "GDP Per Capita")+
+      scale_y_continuous(name = "Suicide No Per 100K population") + 
+      labs(color="Sex")
+```
+
+
+
+```{R}
+ggplot(data=main, aes(x=main$population,y=main$suicides_no,color = main$age )) +  
+    geom_point(alpha=0.1) +
+  ggtitle("Main Plot -- Population Vs Suicide No")+
+scale_x_continuous(name = "Population")+
+      scale_y_continuous(name = "Suicide No") + 
+      labs(color="Age Group")
+```
+```{R}
+ggplot(data=main, aes(x=main$gdp_for_year....,y=main$suicides.100k.pop,color = main$age )) +  
+    geom_point(alpha=0.1) +
+  ggtitle("Main Plot -- GDP For Year Vs Suicide No Per 100K population")+
+scale_x_continuous(name = "GDP For Year")+
+      scale_y_continuous(name = "Suicide No Per 100K population") + 
+      labs(color="Age Group")
+```
+
+```{R}
+ggplot(data=main, aes(x=main$gdp_per_capita....,y=main$suicides.100k.pop,color = main$age )) +  
+    geom_point(alpha=0.1) +
+  ggtitle("Main Plot -- GDP Per Capita Vs Suicide No Per 100K population")+
+scale_x_continuous(name = "GDP Per Capita")+
+      scale_y_continuous(name = "Suicide No Per 100K population") + 
+      labs(color="Age Group")
+```
+
+
+```{R}
+ggplot(data=main, aes(x=main$gdp_for_year....,y=main$suicides_no,color = main$age )) +  
+    geom_point(alpha=0.1) +
+  ggtitle("Main Plot -- GDP For Year Vs Suicide No")+
+scale_x_continuous(name = "GDP For Year")+
+      scale_y_continuous(name = "Suicide No") + 
+      labs(color="Age Group")
+```
+
+```{R}
+ggplot(data=main, aes(x=main$gdp_per_capita....,y=main$suicides_no,color = main$age )) +  
+    geom_point(alpha=0.1) +
+  ggtitle("Main Plot -- GDP Per Capita Vs Suicide No Per 100K population")+
+scale_x_continuous(name = "GDP Per Capita")+
+      scale_y_continuous(name = "Suicide No") + 
+      labs(color="Age Group")
+```
+
+
+```{R, fig.width=20, fig.height=11}
+tes <-aggregate(main$suicides_no, by=list(main$Country), FUN=mean)
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x),fill =Group.1 )) +  
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+theme(legend.position="top",
+      axis.text.x = element_text(angle = 45))+
+  guides(fill = guide_legend(nrow = 8))+
+      labs(fill="Country")+
+        scale_y_continuous(name = "Suicide No") + 
+        scale_x_discrete(name = "Country") + 
+  ggtitle("Main Plot -- Country Vs Mean Suicide No")
+```
+```{R}
+tes <-aggregate(main$suicides.100k.pop, by=list(main$Country), FUN=mean)
+tes = tes[order(-tes$x),]
+```
+
+```{R, fig.width=20, fig.height=11}
+tes <-aggregate(main$suicides.100k.pop, by=list(main$Country), FUN=mean)
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x),fill =Group.1 )) +  
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+theme(legend.position="top",
+      axis.text.x = element_text(angle = 45))+
+  guides(fill = guide_legend(nrow = 8))+
+      labs(fill="Country")+
+        scale_y_continuous(name = "Suicide No Per 100K Population") + 
+        scale_x_discrete(name = "Country") + 
+  ggtitle("Main Plot -- Country Vs Mean Suicide No Per 100K population")
+```
+```{R}
+write.csv(tes, file = "CountryWiseSuicidePer100K.csv")
+```
+
+```{R}
+tes <-aggregate(main$suicides_no, by=list(main$Country), FUN=mean)
+write.csv(tes, file = "CountryWiseSuicideNo.csv")
+
+```
+
+```{R, fig.width=20, fig.height=11}
+tes <-aggregate(main$suicides.100k.pop, by=list(main$Country), FUN=mean)
+tes = tes[order(-tes$x),]
+tes = tes[1:10,]
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x),fill =Group.1 )) +  
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+theme(legend.position="top",
+      axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+      axis.text.x = element_text(angle = 45),
+      axis.title = element_text(face="bold", color="firebrick",size=20),
+              plot.title =  element_text(size=25, color = "firebrick",face = "bold",hjust = .5))+
+  guides(fill = guide_legend(nrow = 1))+
+      labs(fill="Country")+
+        scale_y_continuous(name = "Suicide No Per 100K Population") + 
+        scale_x_discrete(name = "Country") + 
+  ggtitle("Main Plot -- Top 10 Country With Max Mean Suicide No Per 100K population")
+```
+```{R, fig.width=20, fig.height=11}
+tes <-aggregate(main$suicides.100k.pop, by=list(main$Country), FUN=mean)
+tes = tes[order(tes$x),]
+tes = tes[1:10,]
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x),fill =Group.1 )) +  
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+theme(legend.position="top",
+      axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+      axis.text.x = element_text(angle = 45),
+      axis.title = element_text(face="bold", color="firebrick",size=20),
+              plot.title =  element_text(size=25, color = "firebrick",face = "bold",hjust = .5))+
+  guides(fill = guide_legend(nrow = 1))+
+      labs(fill="Country")+
+        scale_y_continuous(name = "Suicide No Per 100K Population") + 
+        scale_x_discrete(name = "Country") + 
+  ggtitle("Main Plot -- Top 10 Country With Least Mean Suicide No Per 100K population")
+```
+
+
+
+```{R, fig.width=20, fig.height=11}
+tes <-aggregate(main$suicides_no, by=list(main$Country), FUN=mean)
+tes = tes[order(-tes$x),]
+tes = tes[1:10,]
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x),fill =Group.1 )) +  
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+theme(legend.position="top",
+      axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+      axis.text.x = element_text(angle = 45),
+      axis.title = element_text(face="bold", color="firebrick",size=20),
+              plot.title =  element_text(size=25, color = "firebrick",face = "bold",hjust = .5))+
+  guides(fill = guide_legend(nrow = 1))+
+      labs(fill="Country")+
+        scale_y_continuous(name = "Suicide No") + 
+        scale_x_discrete(name = "Country") + 
+  ggtitle("Main Plot -- Top 10 Country With Max Mean Suicide No")
+```
+```{R, fig.width=20, fig.height=11}
+tes <-aggregate(main$suicides_no, by=list(main$Country), FUN=mean)
+tes = tes[order(tes$x),]
+tes = tes[1:10,]
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x),fill =Group.1 )) +  
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+theme(legend.position="top",
+      axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+      axis.text.x = element_text(angle = 45),
+      axis.title = element_text(face="bold", color="firebrick",size=20),
+              plot.title =  element_text(size=25, color = "firebrick",face = "bold",hjust = .5))+
+  guides(fill = guide_legend(nrow = 1))+
+      labs(fill="Country")+
+        scale_y_continuous(name = "Suicide No") + 
+        scale_x_discrete(name = "Country") + 
+  ggtitle("Main Plot -- Top 10 Country With Least Mean Suicide No")
+```
+
+```{R}
+tes <-aggregate(main$suicides_no, by=list(main$age), FUN=mean)
+pop <-aggregate(main$population, by=list(main$age), FUN=mean)
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x) )) +  
+    geom_col(data=pop, aes(y=(pop$x/10000 * -1),color ="Overall Population in 1e4"),fill="black") +
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+  theme(
+      axis.text = element_text(face="bold", color="Black",size=10, angle=45),
+      axis.text.x = element_text(angle = 45),
+      axis.title = element_text(face="bold", color="firebrick",size=15),
+              plot.title =  element_text(size=20, color = "firebrick",face = "bold",hjust = .5))+
+      labs(fill="Age Group",color = "")+
+        scale_y_continuous(name = "Suicide No") + 
+        scale_x_discrete(name = "Age Group") + 
+  ggtitle("Main Plot -- Age Groups Vs Suicide No")
+```
+
+```{R}
+tes <-aggregate(combined$suicides_no, by=list(combined$age), FUN=mean)
+pop <-aggregate(combined$population, by=list(combined$age), FUN=mean)
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x),fill =Group.1 )) +  
+    geom_col(data=pop, aes(y=(pop$x/10000 * -1),fill ="Population in 1e4")) +
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+  ggtitle("Combined Plot -- Age Groups Vs Suicide No")
+
+```
+```{R}
+tes <-aggregate(main$suicides.100k.pop, by=list(main$age), FUN=mean)
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x) )) +  
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+  theme(
+      axis.text = element_text(face="bold", color="Black",size=10, angle=45),
+      axis.text.x = element_text(angle = 45),
+      axis.title = element_text(face="bold", color="firebrick",size=12),
+              plot.title =  element_text(size=15, color = "firebrick",face = "bold",hjust = .5))+
+      labs(fill="Age Group")+
+        scale_y_continuous(name = "Suicide No Per 100K Population") + 
+        scale_x_discrete(name = "Age Group") + 
+  ggtitle("Main Plot -- Age Groups Vs Suicide No Per 100K population")
+```
+
+```{R}
+tesData <- main[main$Year == 2016,]
+tes <-aggregate(tesData$suicides_no, by=list(tesData$Country), FUN=mean)
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x),fill =Group.1 )) +  
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Country")+
+      scale_y_continuous(name = "Suicides no") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No Vs Age Group For Year 2016")
+
+```
+
+
+```{R}
+tes <-aggregate(combined$suicides.100k.pop, by=list(combined$age), FUN=mean)
+ggplot(data=tes, aes(x=reorder(tes$Group.1,tes$x),fill =Group.1 )) +  
+  geom_col(data=tes, aes(x=reorder(tes$Group.1,tes$x), y=tes$x,fill =Group.1 )) +
+  ggtitle("Combined Plot -- Age Groups Vs Suicide per 100 K population")
+
+```
+------------------------------^population^---------------------------------------------------------------------------------------------
+
+```{R}
+tes <-aggregate(combined$suicides_no, by=list(combined$generation), FUN=mean)
+ggplot(data=tes, aes(x=tes$x,y=tes$Group.1,fill=tes$Group.1) ) +  
+  geom_col(data=tes, aes(y=tes$x,x=tes$Group.1))+
+  ggtitle("Combined Plot -- Generation Vs Suicide No")
+```
+```{R}
+tes <-aggregate(main$suicides_no, by=list(main$generation), FUN=mean)
+ggplot(data=tes, aes(x=tes$x,y=tes$Group.1,fill=tes$Group.1) ) +  
+  geom_col(data=tes, aes(y=tes$x,x=tes$Group.1))+
+  ggtitle("Main Plot -- Generation Vs Suicide No")
+```
+
+```{R}
+tes <-aggregate(combined$suicides_no, by=list(combined$sex), FUN=mean)
+ggplot(data=tes, aes(x=tes$x,y=tes$Group.1,fill=tes$Group.1) ) +  
+  geom_col(data=tes, aes(y=tes$x,x=tes$Group.1))+
+  ggtitle("Combined Plot -- Sex Vs Suicide No")
+```
+```{R}
+tes <-aggregate(main$suicides_no, by=list(main$sex), FUN=mean)
+ggplot(data=tes, aes(x=tes$x,y=tes$Group.1,fill=tes$Group.1) ) +  
+  geom_col(data=tes, aes(y=tes$x,x=tes$Group.1))+
+  ggtitle("Main Plot -- Sex Vs Suicide No")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1)) +
+  ggtitle("Combined Plot -- Male(Color) Female(Black) -- Suicide No Vs Age Group")
+```
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicide No Vs Age Group")
+```
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedMale$population, by=list(combinedMale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x/10000*-1,x=tesFemale$Group.1)) +
+  ggtitle("Combined Plot -- Male -- Suicide No(+population) Vs Age Group")
+```
+```{R}
+combinedMale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedMale$population, by=list(combinedMale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x/10000*-1,x=tesFemale$Group.1))  +
+  ggtitle("Combined Plot -- Female -- Suicide No(+population) Vs Age Group")
+```
+```{R}
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$population, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x/10000*-1,x=tesFemale$Group.1))  +
+  ggtitle("Main Plot -- Female -- Suicide No(+population) Vs Age Group")
+```
+```{R}
+combinedFemale = main[main$sex == 'male',]
+tesMale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$population, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x/10000*-1,x=tesFemale$Group.1))  +
+  ggtitle("Main Plot -- Female -- Suicide No(+population) Vs Age Group")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$population, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$population, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1))  +
+  ggtitle("Combined Plot -- Male(Color) Female(Black) -- Population Vs Age")
+```
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$population, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$population, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Population Vs Age")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1)) +
+  ggtitle("Combined Plot -- Male(Color) Female(Black) -- Suicidesper 100K population Vs Age")
+```
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1))+
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides Per 100 K population Vs Age")
+```
+
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$Year), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$Year), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=tesMale$Group.1,fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1)) +
+  ggtitle("Combined Plot -- Male(Color) Female(Black) -- Suicides per 100 K population Vs Year")
+```
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$Year), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$Year), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=tesMale$Group.1,fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_continuous(name = "Years",breaks=seq(1985,2016,5),labels = seq(1985,2016,5))+
+      scale_y_continuous(name = "Suicides per 100K population") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides per 100K population Vs Year For respective Sex")
+```
+```{R}
+tesMale <-aggregate(main$suicides_no, by=list(main$Year), FUN=mean)
+
+g <- ggplot()+  
+  geom_point(data=tesMale, aes(x=as.numeric(tesMale$Group.1),y=as.numeric(tesMale$x))) + geom_smooth(data = tesMale,aes(x=as.numeric(tesMale$Group.1),y=as.numeric(tesMale$x)),method = "lm")
+g
+```
+```{R}
+tesMale <-aggregate(main$suicides_no, by=list(main$Year), FUN=mean)
+
+g <- ggplot()+  
+  facet_grid(main$age~main$sex)+
+  geom_smooth(data = main,aes(x=as.numeric(main$Year),y=as.numeric(main$suicides_no)),method = "lm")
+g
+```
+```{R}
+tesMale <-aggregate(main$suicides_no, by=list(main$Year), FUN=mean)
+
+g <- ggplot()+  
+  facet_grid(main$age~main$sex)+
+  geom_smooth(data = main,aes(x=as.numeric(main$Year),y=as.numeric(main$suicides.100k.pop)),method = "lm")
+g
+```
+```{R}
+g <- ggplot()+  
+  facet_grid(.~main$sex)+
+  geom_smooth(data = main,aes(x=as.numeric(main$Year),y=as.numeric(main$suicides.100k.pop)),method = "lm")+
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_continuous(name = "Years",breaks=seq(1985,2016,5),labels = seq(1985,2016,5))+
+      scale_y_continuous(name = "Suicides per 100K population") + 
+      labs(color="",fill ="" )+
+    ggtitle("Main Plot --Suicides per 100K population Vs Year For respective Sex")
+g
+```
+```{R}
+g <- ggplot()+  
+  facet_grid(.~main$sex)+
+  geom_smooth(data = main,aes(x=as.numeric(main$Year),y=as.numeric(main$suicides_no)),method = "lm")+
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_continuous(name = "Years",breaks=seq(1985,2016,5),labels = seq(1985,2016,5))+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+    ggtitle("Main Plot --Suicides No Vs Year For respective Sex")
+g
+```
+```{R}
+str(tesMale)
+
+```
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$Year), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$Year), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=tesMale$Group.1,fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_continuous(name = "Years",breaks=seq(1985,2016,5),labels = seq(1985,2016,5))+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No Vs Year For respective Sex")
+```
+
+
+
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Age Group")+
+      scale_y_continuous(name = "Suicides per 100K population",breaks=seq(-10,40,10),labels = abs(seq(-10,40,10))) + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides per 100K population Vs AGe Group For respective Sex")
+```
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Age Group")+
+      scale_y_continuous(name = "Suicides per 100K population",breaks=append(seq(-250,0,150),seq(0,900,150)),labels = abs(append(seq(-250,0,150),seq(0,900,150)))) + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No Vs Age Group For respective Sex")
+```
+
+
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$gdp_block..1e9.), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$gdp_block..1e9.), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "GDP For Year (in Billion $)")+
+      scale_y_continuous(name = "Suicides per 100K population",breaks=append(seq(-5,0,5),seq(0,30,10)),labels = abs(append(seq(-5,0,5),seq(0,30,10)))) + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides per 100K population Vs GDP (in Billion $) For respective Sex")
+```
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$gdp_block..1e9.), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$gdp_block..1e9.), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "GDP For Year(in Billion $)")+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No Vs GDP (in Billion $) For respective Sex")
+```
+
+
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$age), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$age), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Age Group")+
+      scale_y_continuous(name = "Suicides per 100K population",breaks=append(seq(-250,0,150),seq(0,900,150)),labels = abs(append(seq(-250,0,150),seq(0,900,150)))) + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No Vs Age Group For respective Sex")
+```
+
+
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$gdp_per_capita_block..1e9.), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$gdp_per_capita_block..1e9.), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "GDP Per Capita ($)")+
+      scale_y_continuous(name = "Suicides per 100K population",breaks=append(seq(-5,0,5),seq(0,30,10)),labels = abs(append(seq(-5,0,5),seq(0,30,10)))) + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides per 100K population Vs GDP Per Capita ($) For respective Sex")
+```
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$gdp_per_capita_block..1e9.), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$gdp_per_capita_block..1e9.), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "GDP Per Capita($)")+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No Vs GDP Per Capita ($) For respective Sex")
+```
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$dystopiaResidualBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$dystopiaResidualBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Dysoptia Residual")+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No Vs Dysoptia Residual For respective Sex")
+```
+
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$familyBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$familyBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Family")+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No Vs Family For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$generosityBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$generosityBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Generosity")+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No Vs Genorisity For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$happinessRankBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$happinessRankBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Happiness Rank")+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Happiness Rank Vs Suicide Rates For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$happinessScoreBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$happinessScoreBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Happiness Score")+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Happiness Score Vs Suicide Rates For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$healthBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$healthBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Health Life Expectancy")+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot -- Health Life Expectancy Vs Suicide Rates For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$trustBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$trustBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Trust in Government")+
+      scale_y_continuous(name = "Suicides No") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot -- Trust in Government Vs Suicide Rates For respective Sex")
+```
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$dystopiaResidualBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$dystopiaResidualBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Dysoptia Residual")+
+      scale_y_continuous(name = "Suicides No per 100K Population") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No Per 100 K population Vs Dysoptia Residual For respective Sex")
+```
+
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$familyBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$familyBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Family")+
+      scale_y_continuous(name = "Suicides No per 100K Population") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No per 100K Population Vs Family For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$generosityBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$generosityBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Generosity")+
+      scale_y_continuous(name = "Suicides No per 100K Population") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Suicides No per 100K Population Vs Genorisity For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$happinessRankBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$happinessRankBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Happiness Rank")+
+      scale_y_continuous(name = "Suicides No per 100K Population") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Happiness Rank Vs Suicide Rates For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$happinessScoreBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$happinessScoreBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Happiness Score")+
+      scale_y_continuous(name = "Suicides No per 100K Population") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot --Happiness Score Vs Suicides No per 100K Population For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$healthBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$healthBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Health Life Expectancy")+
+      scale_y_continuous(name = "Suicides No per 100K Population") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot -- Health Life Expectancy Vs Suicides No per 100K Population For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$trustBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$trustBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Trust in Government")+
+      scale_y_continuous(name = "Suicides No per 100K Population") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot -- Trust in Government Vs Suicides No per 100K Population For respective Sex")
+```
+
+
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$freedomBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$freedomBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Freedon")+
+      scale_y_continuous(name = "Suicides No per 100K Population") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot -- Freedom Vs Suicides No per 100K Population For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$freedomBlock), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$freedomBlock), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Freedom")+
+      scale_y_continuous(name = "Suicides No per 100K Population") + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot -- Freedom Vs Suicides No per 100K Population For respective Sex")
+```
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$Region), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$Region), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Region")+
+      scale_y_continuous(name = "Suicides No per 100K Population",breaks=seq(-10,40,10),labels = abs(seq(-10,40,10))) + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot -- Region Vs Suicides No per 100K Population For respective Sex")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides_no, by=list(combinedMale$Region), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides_no, by=list(combinedFemale$Region), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = "Male")) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1,color = "Female")) +
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Region")+
+      scale_y_continuous(name = "Suicides No",breaks=seq(-2000,6000,2000),labels = abs(seq(-2000,6000,2000))) + 
+      labs(color="",fill ="" )+
+  ggtitle("Main Plot -- Region Vs Suicides No For respective Sex")
+```
+
+```{R}
+ggplot() +  
+  geom_col(data=main, aes(x=main$suicides.100k.pop,xmain$Year,fill = main$sex)) +
+  ggtitle("Combined Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs Year")
+```
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$gdp_block..1e9.), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$gdp_block..1e9.), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1)) +
+  ggtitle("Combined Plot -- Male(Color) Female(Black) -- Suicides per 100 K population Vs GDP Block")
+```
+```{R}
+combinedMale = main[main$sex == 'male',]
+combinedFemale = main[main$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$gdp_block..1e9.), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$gdp_block..1e9.), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs GDP Block")
+```
+
+
+```{R}
+combinedMale = combined[combined$sex == 'male',]
+combinedFemale = combined[combined$sex == 'female',]
+tesMale <-aggregate(combinedMale$suicides.100k.pop, by=list(combinedMale$gdp_per_capita_block..1e9.), FUN=mean)
+tesFemale <-aggregate(combinedFemale$suicides.100k.pop, by=list(combinedFemale$gdp_per_capita_block..1e9.), FUN=mean)
+ggplot() +  
+  geom_col(data=tesMale, aes(y=tesMale$x,x=reorder(tesMale$Group.1,tesMale$x),fill = tesMale$Group.1)) +
+    geom_col(data=tesFemale, aes(y=tesFemale$x*-1,x=tesFemale$Group.1)) +
+  ggtitle("Combined Plot -- Male(Color) Female(Black) -- Suicides per 100 K population Vs GDP Per Capita Block")
+```
+```{R, fig.width=20, fig.height=12}
+ggplot(data = main, aes(x= main$gdp_block..1e9., y= main$suicides.100k.pop)) +  
+    facet_grid(main$age~main$sex)+ 
+      geom_boxplot(aes(color = main$gdp_block..1e9.)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs GDP Block")
+```
+```{R, fig.width=20, fig.height=12}
+ggplot(data = main, aes(x= main$gdp_per_capita_block..1e9., y= main$suicides.100k.pop)) +  
+    facet_grid(main$age~main$sex)+ 
+      geom_boxplot(aes(color = main$gdp_per_capita_block..1e9.)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs GDP Per Capita Block")
+```
+
+```{R}
+meanscores <- attributes(combined$age)
+meanscores
+```
+
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$gdp_block..1e9., y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$age~combined$sex)+ 
+    geom_boxplot(aes(color = combined$gdp_block..1e9.)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs GDP Per Capita Block")
+```
+
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$gdp_per_capita_block..1e9., y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$age~combined$sex)+ 
+      geom_boxplot(aes(color = combined$gdp_per_capita_block..1e9.)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs GDP Per Capita Block")
+```
+
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$dystopiaResidualBlock, y= combined$suicides.100k.pop)) +  
+    facet_grid(.~combined$sex)+ 
+        geom_boxplot(aes(color = combined$dystopiaResidualBlock)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs DysoptiaResidual Block")
+```
+
+
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$dystopiaResidualBlock, y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$age~combined$sex)+ 
+        geom_boxplot(aes(color = combined$dystopiaResidualBlock)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs DysoptiaResidual Block")
+```
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$age, y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$dystopiaResidualBlock~combined$sex)+ 
+        geom_boxplot(aes(color = combined$dystopiaResidualBlock)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs DysoptiaResidual Block")
+```
+
+
+
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$familyBlock, y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$age~combined$sex)+ 
+        geom_boxplot(aes(color = combined$familyBlock)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs Family Block")
+```
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$freedomBlock, y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$age~combined$sex)+ 
+        geom_boxplot(aes(color = combined$freedomBlock)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs Freedon Block")
+```
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$generosityBlock, y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$age~combined$sex)+
+        geom_boxplot(aes(color = combined$generosityBlock)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs Genorisity Block")
+```
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$happinessRankBlock, y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$age~combined$sex)+ 
+      geom_boxplot(aes(color = combined$happinessRankBlock)) +
+   theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+            axis.text.y = element_text(angle = 0), 
+            axis.title = element_text(face="bold", color="firebrick",size=15),
+            legend.text = element_text(size=15,colour = "DarkGreen"),
+            plot.title =  element_text(size=18, color = "firebrick",face = "bold",hjust = .5)) + 
+      scale_x_discrete(name = "Happiness Rank")+
+      scale_y_continuous(name = "Suicides No Per 100K Population") + 
+      labs(color="Happiness Rank Range",fill ="" )+
+  ggtitle("Main Plot -- Happiness Rank vs Suicides per 100K population for repective sex")
+```
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$happinessScoreBlock, y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$age~combined$sex)+ 
+        geom_boxplot(aes(color = combined$happinessScoreBlock)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs Happiness Score Block")
+```
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$trustBlock, y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$age~combined$sex)+ 
+        geom_boxplot(aes(color = combined$trustBlock)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs Trust Block")
+```
+```{R, fig.width=20, fig.height=12}
+ggplot(data = combined, aes(x= combined$healthBlock, y= combined$suicides.100k.pop)) +  
+    facet_grid(combined$age~combined$sex)+ 
+        geom_boxplot(aes(color = combined$healthBlock)) +
+  ggtitle("Main Plot -- Male(Color) Female(Black) -- Suicides per 100K population Vs Health Block")
+```
+```{R}
+str(combined)
+```
+```{R}
+
+```
+```{R}
+unique(combined$age)
+```
+```{R}
+temp = combined[combined$age == '5-14 years' ,c('Year', 'suicides_no', 'population','suicides.100k.pop', 'gdp_for_year....',
+       'gdp_per_capita....','Dystopia.Residual',
+       'Economy..GDP.per.Capita.', 'Family', 'Freedom', 'Generosity',
+       'Happiness.Rank', 'Happiness.Score', 'Health..Life.Expectancy.',
+        'Trust..Government.Corruption.')]
+```
+
+```{R, fig.width=20, fig.height=11}
+library(corrplot)
+M <- cor(combined[combined$sex == 'male' ,c( 'suicides_no','population','suicides.100k.pop', 'gdp_for_year....',
+       'gdp_per_capita....','Dystopia.Residual',
+       'Economy..GDP.per.Capita.', 'Family', 'Freedom', 'Generosity',
+       'Happiness.Rank', 'Happiness.Score', 'Health..Life.Expectancy.',
+        'Trust..Government.Corruption.')])
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", "cyan", "#007FFF", "blue","#00007F"))
+corrplot(M, method="color", col=col1(20), cl.length=21,order = "AOE", addCoef.col="grey")
+```
+
+```{R, fig.width=20, fig.height=11}
+library(corrplot)
+M <- cor(combined[combined$sex == 'female' ,c( 'suicides_no','population','suicides.100k.pop', 'gdp_for_year....',
+       'gdp_per_capita....','Dystopia.Residual',
+       'Economy..GDP.per.Capita.', 'Family', 'Freedom', 'Generosity',
+       'Happiness.Rank', 'Happiness.Score', 'Health..Life.Expectancy.',
+        'Trust..Government.Corruption.')])
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", "cyan", "#007FFF", "blue","#00007F"))
+corrplot(M, method="color", col=col1(20), cl.length=21,order = "AOE", addCoef.col="grey")
+```
+
+```{R, fig.width=20, fig.height=11}
+library(corrplot)
+M <- cor(combined[combined$age == '5-14 years' ,c( 'suicides_no','population','suicides.100k.pop', 'gdp_for_year....',
+       'gdp_per_capita....','Dystopia.Residual',
+       'Economy..GDP.per.Capita.', 'Family', 'Freedom', 'Generosity',
+       'Happiness.Rank', 'Happiness.Score', 'Health..Life.Expectancy.',
+        'Trust..Government.Corruption.')])
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", "cyan", "#007FFF", "blue","#00007F"))
+corrplot(M, method="color", col=col1(20), cl.length=21,order = "AOE", addCoef.col="grey")
+```
+
+```{R, fig.width=20, fig.height=11}
+library(corrplot)
+M <- cor(combined[combined$age == '35-54 years' ,c('Year', 'suicides_no', 'population','suicides.100k.pop', 'gdp_for_year....',
+       'gdp_per_capita....','Dystopia.Residual',
+       'Economy..GDP.per.Capita.', 'Family', 'Freedom', 'Generosity',
+       'Happiness.Rank', 'Happiness.Score', 'Health..Life.Expectancy.',
+        'Trust..Government.Corruption.')])
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", "cyan", "#007FFF", "blue","#00007F"))
+corrplot(M, method="color", col=col1(20), cl.length=21,order = "AOE", addCoef.col="grey")
+```
+
+```{R, fig.width=20, fig.height=11}
+library(corrplot)
+M <- cor(combined[combined$age == '25-34 years' ,c('Year', 'suicides_no', 'population','suicides.100k.pop', 'gdp_for_year....',
+       'gdp_per_capita....','Dystopia.Residual',
+       'Economy..GDP.per.Capita.', 'Family', 'Freedom', 'Generosity',
+       'Happiness.Rank', 'Happiness.Score', 'Health..Life.Expectancy.',
+        'Trust..Government.Corruption.')])
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", "cyan", "#007FFF", "blue","#00007F"))
+corrplot(M, method="color", col=col1(20), cl.length=21,order = "AOE", addCoef.col="grey")
+```
+
+```{R, fig.width=20, fig.height=11}
+library(corrplot)
+M <- cor(combined[combined$age == '55-74 years' ,c('Year', 'suicides_no', 'population','suicides.100k.pop', 'gdp_for_year....',
+       'gdp_per_capita....','Dystopia.Residual',
+       'Economy..GDP.per.Capita.', 'Family', 'Freedom', 'Generosity',
+       'Happiness.Rank', 'Happiness.Score', 'Health..Life.Expectancy.',
+        'Trust..Government.Corruption.')])
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", "cyan", "#007FFF", "blue","#00007F"))
+corrplot(M, method="color", col=col1(20), cl.length=21,order = "AOE", addCoef.col="grey")
+```
+
+```{R, fig.width=20, fig.height=11}
+library(corrplot)
+M <- cor(combined[combined$age == '15-24 years' ,c('Year', 'suicides_no', 'population','suicides.100k.pop', 'gdp_for_year....',
+       'gdp_per_capita....','Dystopia.Residual',
+       'Economy..GDP.per.Capita.', 'Family', 'Freedom', 'Generosity',
+       'Happiness.Rank', 'Happiness.Score', 'Health..Life.Expectancy.',
+        'Trust..Government.Corruption.')])
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", "cyan", "#007FFF", "blue","#00007F"))
+corrplot(M, method="color", col=col1(20), cl.length=21,order = "AOE", addCoef.col="grey")
+```
+```{R, fig.width=20, fig.height=11}
+library(corrplot)
+M <- cor(combined[combined$age == '75+ years' ,c('Year', 'suicides_no', 'population','suicides.100k.pop', 'gdp_for_year....',
+       'gdp_per_capita....','Dystopia.Residual',
+       'Economy..GDP.per.Capita.', 'Family', 'Freedom', 'Generosity',
+       'Happiness.Rank', 'Happiness.Score', 'Health..Life.Expectancy.',
+        'Trust..Government.Corruption.')])
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", "cyan", "#007FFF", "blue","#00007F"))
+corrplot(M, method="color", col=col1(20), cl.length=21,order = "AOE", addCoef.col="grey")
+```
+
+```{R, fig.width=20, fig.height=11}
+library(corrplot)
+M <- cor(combined[,c('Year', 'suicides_no', 'population','suicides.100k.pop', 'gdp_for_year....',
+       'gdp_per_capita....','Dystopia.Residual',
+       'Economy..GDP.per.Capita.', 'Family', 'Freedom', 'Generosity',
+       'Happiness.Rank', 'Happiness.Score', 'Health..Life.Expectancy.',
+        'Trust..Government.Corruption.')])
+col1 <- colorRampPalette(c("#7F0000","red","#FF7F00","yellow","white", "cyan", "#007FFF", "blue","#00007F"))
+corrplot(M, method="color", col=col1(20), cl.length=21,order = "AOE", addCoef.col="grey")
+```

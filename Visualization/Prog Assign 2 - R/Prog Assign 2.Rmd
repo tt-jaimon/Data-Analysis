@@ -1,0 +1,252 @@
+---
+title: "Programming Assign 2"
+output: html_document
+---
+
+
+Setting the current working directory
+```{R}
+setwd("D:/Study Items/Monash/S2/Visualization/Assignments/Prog Assign 2 - R/")
+```
+
+Loading ggplot
+```{R}
+require(ggplot2)
+require(leaflet)
+library(shiny)
+```
+
+Loading the data into R
+```{R}
+data <- read.csv('assignment-02-data-formated.csv')
+data$value <- as.numeric(sub("%", "", data$value ,fixed=TRUE))/100
+data <- data[order(data$latitude),]
+data$new_location = factor(data$location, levels=unique(data$location))
+```
+
+Graph of Belaching rates of different coral types across various locations over the year
+
+```{R, fig.width=20, fig.height=12}
+label1 <- seq(10,120,by=20)
+myGraph <- ggplot(data = data , aes(x= data$year, y= data$value)) 
+g2 <-  myGraph + 
+  geom_point(aes(colour = data$coralType, size = data$year))+
+  facet_grid(data$coralType~data$new_location)+ 
+  
+  theme_grey()+ 
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+        axis.text.y = element_text(angle = 0), 
+        axis.title = element_text(face="bold", color="firebrick",size=20),
+        strip.text = element_text(size = 20, colour = "DarkGreen",face="bold"),
+        legend.title = element_text(size=20, color = "firebrick",face = "bold"), 
+        legend.text = element_text(size=18,colour = "DarkGreen"),
+        plot.title =  element_text(size=25, color = "firebrick",face = "bold",hjust = .5)) + 
+  
+  scale_y_continuous(name = "Bleaching Rates in %",breaks=seq(0.1,1.2,.2),labels = label1)+
+  scale_x_continuous(name = "Years(2010 - 2017)") + 
+  ggtitle("Bleaching Rates Of different Coral Types across various locations over the year")+
+  
+  labs(color="Coral Type", size="Year") +  
+  
+  geom_smooth(method = "lm",
+               color = "black",
+               formula = y~ poly(x, 2),
+              )
+ggsave("plt.png", width = 16, height = 9, dpi = 120)
+g2
+```
+
+Shiny App
+
+```{R, fig.width=20, fig.height=12}
+
+# Define UI for application that draws a histogram
+ui <- shinyUI(
+  fluidPage(
+    sidebarLayout(
+   sidebarPanel(
+  
+    titlePanel("Plot Settings"),
+   selectInput("coralType","Coral Type",
+                  data$coralType, multiple = TRUE),
+   selectInput("site","Location",
+                  data$new_location, multiple = TRUE),
+   selectInput("geom_smooth_method","GEOM SMOOTH METHOD",
+                  c("lm","auto","glm","gam","loess"), multiple = FALSE),
+   selectInput("smoother","Smoother",
+                  c("Turn ON","Turn Off"), multiple = FALSE),
+   selectInput("geom_smooth_se","Display Confidence Interval Across Smoother",
+                  c("Turn ON","Turn Off"), multiple = FALSE),
+   selectInput("plot_type","Plot Type",
+                  c("Scatter","Bar"), multiple = FALSE)
+  )
+   # Application title
+   ,mainPanel(
+        plotOutput("plot")
+   )))
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+  output$plot <-renderPlot({
+    
+    label1 <- seq(10,120,by=20)
+    tempCoralType <- c("blue corals")
+    if (length(input$coralType)>0){
+       tempCoralType <- input$coralType
+       }
+     tempLocation <- c("site01")
+     if (length(input$site)>0){
+       tempLocation <- input$site
+       }
+     tempData <- data[data$coralType  %in% tempCoralType & data$location  %in% tempLocation ,]
+     
+     g <- ggplot(data = tempData , aes(x= tempData$year, y= tempData$value))+
+  facet_grid(tempData$coralType~tempData$new_location)+ 
+  theme_grey()+ 
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+        axis.text.y = element_text(angle = 0), 
+        axis.title = element_text(face="bold", color="firebrick",size=20),
+        strip.text = element_text(size = 20, colour = "DarkGreen",face="bold"),
+        legend.title = element_text(size=20, color = "firebrick",face = "bold"), 
+        legend.text = element_text(size=18,colour = "DarkGreen"),
+        plot.title =  element_text(size=25, color = "firebrick",face = "bold",hjust = .5)) + 
+  scale_y_continuous(name = "Bleaching Rates in %",breaks=seq(0.1,1.2,.2),labels = label1)+
+  scale_x_continuous(name = "Years(2010 - 2017)") + 
+  ggtitle("Bleaching Rates Of different Coral Types across various locations over the year")+
+  labs(color="Coral Type",fill ="Coral Type" )
+  
+     if (input$smoother == "Turn ON"){
+       g <- g + geom_smooth(method = input$geom_smooth_method,
+               color = "black",
+               se = input$geom_smooth_se == "Turn ON" )
+     }
+     if(input$plot_type == "Bar"){
+       g <- g + geom_col(aes(fill = tempData$coralType))
+     }
+     else{
+       g <- g + geom_point(aes(colour = tempData$coralType),size = 5)
+     }
+     g
+
+      
+},height = 950, width = 1250)}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+```{R}
+leaflet(data = data) %>% addTiles() %>%
+  addMarkers(~longitude, ~latitude, label = ~as.character(location), labelOptions = labelOptions(noHide = T, textOnly = TRUE,direction = "left",style = list(
+        "color" = "Black",
+        "font-family" = "serif",
+        "font-style" = "italic",
+        "font-size" = "20px"
+      ))) 
+```
+
+```{R, fig.width=20, fig.height=12}
+
+# Define UI for application that draws a histogram
+ui <- shinyUI( fluidPage(
+    sidebarLayout(
+   sidebarPanel(
+  
+    titlePanel("Plot Settings"),
+   selectInput("coralType","Coral Type",
+                  data$coralType, multiple = TRUE),
+   selectInput("site","Location",
+                  data$new_location, multiple = TRUE),
+   selectInput("geom_smooth_method","GEOM SMOOTH METHOD",
+                  c("lm","auto","glm","gam","loess"), multiple = FALSE),
+   selectInput("smoother","Smoother",
+                  c("Turn ON","Turn Off"), multiple = FALSE),
+   selectInput("geom_smooth_se","Display Confidence Interval Across Smoother",
+                  c("Turn ON","Turn Off"), multiple = FALSE),
+   selectInput("plot_type","Plot Type",
+                  c("Scatter","Bar"), multiple = FALSE),
+  leafletOutput("mymap")
+
+  )
+   # Application title
+   ,mainPanel(
+        plotOutput("plot")
+   )
+  )
+  ) 
+
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+ 
+  output$mymap <- renderLeaflet({
+   
+     tempCoralType <- c("blue corals")
+    if (length(input$coralType)>0){
+       tempCoralType <- input$coralType
+       }
+    tempLocation <- c("site01")
+     if (length(input$site)>0){
+       tempLocation <- input$site
+       }# create leaflet map
+         tempData <- data[data$coralType  %in% tempCoralType & data$location  %in% tempLocation ,]
+
+   leaflet(data = tempData) %>% addTiles() %>%
+  addMarkers(~longitude, ~latitude, label = ~as.character(tempLocation), labelOptions = labelOptions(noHide = T, textOnly = TRUE,direction = "left",style = list(
+        "color" = "Black",
+        "font-family" = "serif",
+        "font-style" = "italic",
+        "font-size" = "20px"
+      ))) 
+  
+  })
+
+  output$plot <-renderPlot({
+    
+    label1 <- seq(10,120,by=20)
+    tempCoralType <- c("blue corals")
+    if (length(input$coralType)>0){
+       tempCoralType <- input$coralType
+       }
+     tempLocation <- c("site01")
+     if (length(input$site)>0){
+       tempLocation <- input$site
+       }
+     tempData <- data[data$coralType  %in% tempCoralType & data$location  %in% tempLocation ,]
+     
+     g <- ggplot(data = tempData , aes(x= tempData$year, y= tempData$value))+
+  facet_grid(tempData$coralType~tempData$new_location)+ 
+  theme_grey()+ 
+  theme(axis.text = element_text(face="bold", color="Black",size=12, angle=45),
+        axis.text.y = element_text(angle = 0), 
+        axis.title = element_text(face="bold", color="firebrick",size=20),
+        strip.text = element_text(size = 20, colour = "DarkGreen",face="bold"),
+        legend.title = element_text(size=20, color = "firebrick",face = "bold"), 
+        legend.text = element_text(size=18,colour = "DarkGreen"),
+        plot.title =  element_text(size=25, color = "firebrick",face = "bold",hjust = .5)) + 
+  scale_y_continuous(name = "Bleaching Rates in %",breaks=seq(0.1,1.2,.2),labels = label1)+
+  scale_x_continuous(name = "Years(2010 - 2017)") + 
+  ggtitle("Bleaching Rates Of different Coral Types across various locations over the year")+
+  labs(color="Coral Type",fill ="Coral Type" )
+  
+     if (input$smoother == "Turn ON"){
+       g <- g + geom_smooth(method = input$geom_smooth_method,
+               color = "black",
+               se = input$geom_smooth_se == "Turn ON" )
+     }
+     if(input$plot_type == "Bar"){
+       g <- g + geom_col(aes(fill = tempData$coralType))
+     }
+     else{
+       g <- g + geom_point(aes(colour = tempData$coralType),size = 5)
+     }
+     g
+
+      
+},height = 950, width = 1250)}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
